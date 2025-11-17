@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url # Import for PostgreSQL
 
 
 # Load environment variables from .env
@@ -30,17 +31,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fl+w)v%xk%mec#66tz068u^odbd4z+75m8nr2g_6gd0$*=7w-f'
+# SECRET_KEY = 'django-insecure-fl+w)v%xk%mec#66tz068u^odbd4z+75m8nr2g_6gd0$*=7w-f'
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
 
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
 # Application definition
 
@@ -108,16 +114,31 @@ WSGI_APPLICATION = 'new_course_correct.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',  # Or your database name from Supabase
+#         'USER': 'postgres.awhqforsdxbwruwbyivf',  # Or your username from Supabase
+#         'PASSWORD': 's9E5Ot73w1iNN7GD',  # Replace with your actual password
+#         'HOST': 'aws-1-eu-north-1.pooler.supabase.com',  # Replace with your host
+#         'PORT': '5432',  # Usually this, but confirm from Supabase
+#     }
+# }
+
+
+# Database (Production) - Reads from Vercel's DATABASE_URL
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',  # Or your database name from Supabase
-        'USER': 'postgres.awhqforsdxbwruwbyivf',  # Or your username from Supabase
-        'PASSWORD': 's9E5Ot73w1iNN7GD',  # Replace with your actual password
-        'HOST': 'aws-1-eu-north-1.pooler.supabase.com',  # Replace with your host
-        'PORT': '5432',  # Usually this, but confirm from Supabase
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        conn_health_check=True,
+    )
 }
+
+# Optional: Fallback to SQLite for local development if Vercel is not set
+if os.environ.get('DATABASE_URL') is None and os.environ.get('VERCEL') is None:
+    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
+    DATABASES['default']['NAME'] = BASE_DIR / 'db.sqlite3'
 
 
 LOGIN_REDIRECT_URL = '/'
@@ -165,3 +186,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Static files settings for Vercel deployment
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
