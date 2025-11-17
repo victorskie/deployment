@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% block title %}Courses - Course Portal{% endblock %}
+
+{% block content %}
+<style>
+    /* Custom Styles for Beauty and Uniqueness */
+    .courses-hero {
+        background-image: url('https://media.istockphoto.com/id/1059510610/vector/it-communication-e-learning-internet-network-as-knowledge-base.jpg?s=612x612&w=0&k=20&c=QEyHx6JnZleLmW9lYgpzvLv765rizr__5zwwKylo300=');  /* Using searched image for hero */
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        color: white;
+    }
+    .hero-overlay {
+        background: rgba(0, 123, 255, 0.6);  /* Blue tint for e-learning theme */
+        padding: 80px 0;
+    }
+    .course-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #e2e6ea;
+        background: white;
+    }
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 123, 255, 0.15);
+    }
+    .course-img {
+        height: 300px;  /* Increased height for better fill */
+        width: 100%;  /* Explicit full width to span the box */
+        object-fit: cover;
+        filter: saturate(1.1);  /* Slight vibrancy boost */
+    }
+    .enroll-btn {
+        background: linear-gradient(to right, #007bff, #00bfff);
+        border: none;
+    }
+    .enroll-btn:hover {
+        background: linear-gradient(to right, #0056d2, #0099cc);
+    }
+    .section-title {
+        background: linear-gradient(to right, #007bff, #00bfff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .fade-in {
+        animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .wave-divider {
+        position: relative;
+        top: -1px;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+    }
+    .wave-divider svg {
+        position: relative;
+        display: block;
+        width: calc(100% + 1.3px);
+        height: 40px;
+    }
+    .wave-fill {
+        fill: #f8f9fa;  /* Smooth transition */
+    }
+</style>
+
+<!-- Courses Hero Section -->
+<div class="courses-hero mb-4">
+    <div class="hero-overlay text-center fade-in">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">Discover Your Courses</h1>
+            <p class="lead mb-4">Explore enrolled and available courses to elevate your learning.</p>
+            {% if user.is_authenticated %}
+                <a href="#enrolled-courses" class="btn btn-light btn-lg enroll-btn">View Enrolled</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-light btn-lg enroll-btn">Log In to Enroll</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <!-- Bootstrap Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'course_list' %}">Courses</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'course_description' course_id=1 %}">Course Description</a></li>  <!-- Added link; adjust course_id as needed -->
+        </ol>
+    </nav>
+
+    {% if user.is_authenticated %}
+        <!-- Enrolled Courses Section -->
+        <h2 id="enrolled-courses" class="mb-4 section-title fw-bold fade-in">Enrolled Courses</h2>
+        <div class="row g-4 mb-5">
+            {% for c in student.courses.all %}
+                <div class="col-md-4 fade-in">
+                    <div class="course-card shadow-sm">
+                        <img src="{% cycle 'https://cdn.dribbble.com/users/10876662/screenshots/17593090/media/13a6c751cabdaec1379d0c220c0ceeb8.png?format=webp&resize=1440x&vertical=center' 'https://media.istockphoto.com/id/1919863292/photo/e-learning-education-internet-lessons-and-online-learning-with-webinars-video-tutorials.jpg?s=612x612&w=0&k=20&c=zWAqp6FGH-zm6b0Os_CssxubtrgKh1MyFeMgelFZbOg=' 'https://media.istockphoto.com/id/1059510610/vector/it-communication-e-learning-internet-network-as-knowledge-base.jpg?s=612x612&w=0&k=20&c=QEyHx6JnZleLmW9lYgpzvLv765rizr__5zwwKylo300=' %}" class="course-img" alt="{{ c.title }} Illustration">  <!-- Cycling searched images -->
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-bold"><a href="{% url 'course_description' course_id=c.id %}" class="text-decoration-none text-dark">{{ c.title }}</a></h5>
+                            <p class="card-text text-muted mb-3">{{ c.description|truncatewords:20 }}</p>
+                            <span class="badge bg-success">Enrolled</span>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center fade-in">
+                    <div class="alert alert-info">No enrolled courses yet. Start exploring below!</div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Wave Divider for Unique Transition -->
+        <div class="wave-divider mb-4">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="wave-fill"></path>
+            </svg>
+        </div>
+    {% else %}
+        <!-- Guest Prompt with Eye-Catching Design -->
+        <div class="alert alert-info mb-5 rounded-3 shadow-sm fade-in text-center p-4">
+            <h5 class="fw-bold mb-3">Unlock Personalized Learning</h5>
+            <p class="mb-4">Log in to see your enrolled courses and start your journey.</p>
+            <a href="{% url 'login' %}" class="btn enroll-btn text-white">Log In Now</a>
+        </div>
+    {% endif %}
+
+    <!-- All Courses Section -->
+    <h2 class="mb-4 section-title fw-bold fade-in">All Courses</h2>
+    <div class="row g-4">
+        {% for p in courses %}
+            <div class="col-md-4 fade-in">
+                <div class="course-card shadow-sm">
+                    <img src="{% cycle 'https://cdn.dribbble.com/users/10876662/screenshots/17593090/media/13a6c751cabdaec1379d0c220c0ceeb8.png?format=webp&resize=1440x&vertical=center' 'https://media.istockphoto.com/id/1919863292/photo/e-learning-education-internet-lessons-and-online-learning-with-webinars-video-tutorials.jpg?s=612x612&w=0&k=20&c=zWAqp6FGH-zm6b0Os_CssxubtrgKh1MyFeMgelFZbOg=' 'https://media.istockphoto.com/id/1059510610/vector/it-communication-e-learning-internet-network-as-knowledge-base.jpg?s=612x612&w=0&k=20&c=QEyHx6JnZleLmW9lYgpzvLv765rizr__5zwwKylo300=' %}" class="course-img" alt="{{ p.title }} Illustration">  <!-- Cycling searched images -->
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold"><a href="{% url 'course_description' course_id=p.id %}" class="text-decoration-none text-dark">{{ p.title }}</a></h5>
+                        <p class="card-text text-muted mb-3">{{ p.description|truncatewords:20 }}</p>
+                        {% if user.is_authenticated %}
+                            <a href="#" class="btn btn-sm enroll-btn text-white w-100">Enroll <i class="bi bi-arrow-right"></i></a>
+                        {% else %}
+                            <span class="badge bg-secondary w-100 text-center py-2">Log in to Enroll</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center fade-in">
+                <div class="alert alert-warning">No courses available yet. Check back soon!</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

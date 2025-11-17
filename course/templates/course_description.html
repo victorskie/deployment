@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.title }} - Course Portal{% endblock %}
+
+{% block content %}
+<style>
+    /* Improved Custom Styles for Modernity and Appeal */
+    .course-detail-container {
+        background: #f9fcff;  /* Light blue tint for e-learning vibe */
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    .course-detail-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://static.vecteezy.com/system/resources/previews/011/263/900/non_2x/e-learning-innovative-online-education-and-internet-technology-webinar-teaching-online-training-courses-skill-development-concept-with-magnifier-in-wireframe-hand-and-icons-illustration-vector.jpg');  /* New searched image [image:0] */
+        background-size: cover;
+        opacity: 0.05;  /* Subtle blend for background */
+        z-index: -1;
+    }
+    .course-title {
+        font-family: 'Arial', sans-serif;  /* Clean, modern font */
+        color: #1a1a1a;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 123, 255, 0.1);
+    }
+    .enroll-btn {
+        background: linear-gradient(to right, #007bff, #00bfff);
+        border: none;
+        width: 100%;
+        font-weight: bold;
+    }
+    .enroll-btn:hover {
+        background: linear-gradient(to right, #0056d2, #0099cc);
+    }
+    .back-btn {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .back-btn:hover {
+        text-decoration: underline;
+    }
+    .fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="container py-5">
+    <!-- Bootstrap Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'course_list' %}">Courses</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ course.title }}</li>
+        </ol>
+    </nav>
+
+    {% if course %}
+        <div class="course-detail-container fade-in">
+            <div class="row">
+                <!-- Main Content -->
+                <div class="col-md-8">
+                    <h1 class="course-title mb-4">{{ course.title }}</h1>
+                    <p class="lead text-muted mb-4">{{ course.description }}</p>
+                    
+                    <!-- Placeholder for Additional Details (e.g., syllabus, duration) -->
+                    <div class="mb-4">
+                        <h5 class="fw-bold">Course Highlights</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Duration: 4 weeks</li>  <!-- Placeholder; customize or dynamic -->
+                            <li class="list-group-item">Level: Intermediate</li>
+                            <li class="list-group-item">Instructor: Expert Faculty</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Progress Bar Placeholder (for enrolled users) -->
+                    {% if student and student in course.Student.all %}
+                        <div class="progress mb-4" style="height: 20px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25% Complete</div>  <!-- Dynamic in future -->
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Sidebar for Actions -->
+                <div class="col-md-4">
+                    <div class="sidebar">
+                        <h5 class="fw-bold mb-3 text-center">Enrollment Status</h5>
+                        {% if student and student in course.Student.all %}
+                            <div class="alert alert-success text-center enroll-status mb-4">
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                                Enrolled
+                            </div>
+                            <a href="#" class="btn btn-outline-secondary w-100 mb-3">Access Materials</a>
+                        {% elif student %}
+                            <a href="#" class="btn enroll-btn text-white mb-3">Enroll Now <i class="bi bi-arrow-right"></i></a>
+                        {% else %}
+                            <div class="alert alert-info text-center mb-4">
+                                Log in to enroll
+                            </div>
+                        {% endif %}
+                        
+                        <a href="{% url 'course_list' %}" class="back-btn"><i class="bi bi-arrow-left me-2"></i>Back to Courses</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center rounded-3 shadow fade-in">
+            <h4 class="mb-3">Course Not Found</h4>
+            <p>We're sorry, but the course you're looking for isn't available. <a href="{% url 'course_list' %}" class="back-btn">Browse Courses</a></p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

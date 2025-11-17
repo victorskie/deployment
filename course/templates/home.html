@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% block title %}Home - Course Portal{% endblock %}
+
+{% block content %}
+<style>
+    /* Enhanced Custom Styles for Beauty and Uniqueness */
+    .hero-section {
+        background-image: url('https://thumbs.dreamstime.com/z/abstract-digital-learning-background-floating-ui-cards-gradient-blue-white-modern-user-interface-featuring-across-378725146.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        position: relative;
+        color: white;
+    }
+    .hero-overlay {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));  /* Enhanced overlay for contrast */
+        padding: 120px 0;
+    }
+    .feature-section {
+        background: linear-gradient(to bottom, #f8f9fa, #e2e6ea);  /* Subtle background gradient for depth */
+        position: relative;
+        overflow: hidden;
+    }
+    .feature-card {
+        border-radius: 20px;
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+        border: 2px solid transparent;
+        background: white;
+    }
+    .feature-card:hover {
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 15px 30px rgba(0, 123, 255, 0.2) !important;
+        border-color: #007bff;
+    }
+    .feature-img {
+        height: 200px;
+        object-fit: cover;
+        filter: brightness(1.05);  /* Slight enhancement for vibrancy */
+    }
+    .section-title {
+        background: linear-gradient(to right, #007bff, #00bfff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .btn-gradient {
+        background: linear-gradient(to right, #007bff, #00bfff);
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+    }
+    .btn-gradient:hover {
+        background: linear-gradient(to right, #0056d2, #0099cc);
+        box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+    }
+    .fade-in {
+        animation: fadeIn 1.2s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .wave-divider {
+        position: absolute;
+        top: -1px;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+    }
+    .wave-divider svg {
+        position: relative;
+        display: block;
+        width: calc(100% + 1.3px);
+        height: 50px;
+        transform: rotateY(180deg);
+    }
+    .wave-fill {
+        fill: #ffffff;  /* Matches hero to section transition */
+    }
+</style>
+
+<!-- Hero Section (Kept as Liked) -->
+<div class="hero-section">
+    <div class="hero-overlay text-center fade-in">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-3">Unlock Your Potential</h1>
+            {% if user.is_authenticated %}
+                <p class="lead fs-4 mb-4">Welcome back, {{ user.username }}! Continue your journey to mastery.</p>
+            {% else %}
+                <p class="lead fs-4 mb-4">Discover world-class courses designed for your success.</p>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <a href="{% url 'course_list' %}" class="btn btn-lg btn-gradient text-white px-5">Explore Courses</a>
+            {% else %}
+                <a href="{% url 'signup' %}" class="btn btn-lg btn-gradient text-white px-5 me-3">Get Started</a>
+                <a href="{% url 'login' %}" class="btn btn-lg btn-outline-light px-5">Log In</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Features Section with Enhanced Eye-Catching Design -->
+<div class="feature-section py-5">
+    <!-- Wave Divider for Unique Transition -->
+    <div class="wave-divider">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="wave-fill"></path>
+        </svg>
+    </div>
+
+    <div class="container">
+        <!-- Bootstrap Breadcrumb -->
+        <!-- <nav aria-label="breadcrumb" class="fade-in mb-5">
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item active" aria-current="page">Home</li>
+            </ol>
+        </nav> -->
+
+        <h2 class="text-center mb-5 section-title display-5 fw-bold fade-in">What Makes Us Unique</h2>
+        <div class="row justify-content-center g-4">
+            <div class="col-md-4 fade-in" style="animation-delay: 0.2s;">
+                <div class="feature-card shadow-lg">
+                    <img src="https://stg-uploads.slidenest.com/template_1870/templateColor_1846/previewImages/e-learning-training-powerpoint-google-slides-keynote-illustration-2.jpg" class="feature-img" alt="Curated Courses Illustration">
+                    <div class="card-body text-center p-4">
+                        <h5 class="card-title fw-bold fs-4">Curated Courses</h5>
+                        <p class="card-text text-muted">Handpicked content from experts to accelerate your learning.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 fade-in" style="animation-delay: 0.4s;">
+                <div class="feature-card shadow-lg">
+                    <img src="https://stg-uploads.slidenest.com/template_1870/templateColor_1846/previewImages/e-learning-training-powerpoint-google-slides-keynote-illustration-1.jpg" class="feature-img" alt="Interactive Tools Illustration">
+                    <div class="card-body text-center p-4">
+                        <h5 class="card-title fw-bold fs-4">Interactive Tools</h5>
+                        <p class="card-text text-muted">Engage with quizzes, forums, and real-time progress tracking.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 fade-in" style="animation-delay: 0.6s;">
+                <div class="feature-card shadow-lg">
+                    <img src="https://cdn.classpoint.io/wp-content/uploads/Interactive-Presentation-Tools-scaled.png" class="feature-img" alt="Community Support Illustration">
+                    <div class="card-body text-center p-4">
+                        <h5 class="card-title fw-bold fs-4">Community Support</h5>
+                        <p class="card-text text-muted">Join a vibrant network of learners and mentors.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Tagline Footer -->
+        <div class="text-center py-5 mt-5 fade-in">
+            <p class="fs-3 section-title fw-light">Empowering minds, one course at a time. Join us today!</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+# --- Django Files ---
+*.log
+*.pot
+*.mo
+*.po
+db.sqlite3  # Crucial! Keeps your local dev DB off Git.
+media/      # If you are storing local media files
+static/     # If you are compiling static files locally before deployment
+
+# --- Python Environment & Cache ---
+__pycache__/
+*.pyc
+*.o
+*.pyd
+.venv/
+env/
+venv/       # Standard name for virtual environments
+
+# --- Sensitive Environment Variables ---
+.env        # CRITICAL! This holds your Supabase URI and SECRET_KEY
+.flaskenv
+.vscode/    # Optional: Visual Studio Code settings
