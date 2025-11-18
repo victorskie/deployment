@@ -7,7 +7,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "new_course_correct/wsgi.py"
+      "dest": "api/index.py"
     }
   ]
 }
