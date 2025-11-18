@@ -46,7 +46,13 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 
 # ALLOWED_HOSTS = ['*']
+# new_course_correct/settings.py
+
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+# Add this safety fallback to include all vercel.app subdomains
+ALLOWED_HOSTS += ['.vercel.app', '127.0.0.1', 'localhost']
+
+
 
 # Application definition
 
