@@ -132,7 +132,7 @@ WSGI_APPLICATION = 'new_course_correct.wsgi.application'
 # }
 
 
-# Database (Production) - Reads from Vercel's DATABASE_URL
+# Database (Production) - Reads from Vercel's DATABASE_UR
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
