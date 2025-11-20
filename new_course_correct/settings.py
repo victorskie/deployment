@@ -12,12 +12,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import dj_database_url # Import for PostgreSQL
 
 
 # Load environment variables from .env
-load_dotenv()
+# load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,18 +43,15 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 
-# ALLOWED_HOSTS = ['*']
-# new_course_correct/settings.py
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
-# Add this safety fallback to include all vercel.app subdomains
-ALLOWED_HOSTS += ['.vercel.app', '127.0.0.1', 'localhost']
 
+ALLOWED_HOSTS = ['.vercel.app']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -62,11 +59,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'course',
-    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -132,17 +128,21 @@ WSGI_APPLICATION = 'new_course_correct.wsgi.application'
 
 
 # Database (Production) - Reads from Vercel's DATABASE_UR
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=os.environ.get('DATABASE_URL'),
+#         conn_max_age=600,
+#     )
+# }
+
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
+    'default': dj_database_url.parse(
+        os.getenv('DATABASE_URL', 'sqlite:///' + str(BASE_DIR / 'db.sqlite3')),
+        conn_max_age=600
     )
 }
 
-# Optional: Fallback to SQLite for local development if Vercel is not set
-if os.environ.get('DATABASE_URL') is None and os.environ.get('VERCEL') is None:
-    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-    DATABASES['default']['NAME'] = BASE_DIR / 'db.sqlite3'
 
 
 LOGIN_REDIRECT_URL = '/'
@@ -194,10 +194,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# Static files settings for Vercel deployment
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static/'),
 ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
